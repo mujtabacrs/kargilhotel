@@ -3,11 +3,22 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Sun, Moon } from 'lucide-react'
+import { useTheme } from '@/context/ThemeContext'
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  
+  // Only access theme after component is mounted
+  const themeContext = mounted ? useTheme() : null
+  const theme = themeContext?.theme || 'dark'
+  const toggleTheme = themeContext?.toggleTheme || (() => {})
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,15 +74,65 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Theme Toggle Button */}
+            {mounted && (
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={toggleTheme}
+                className="w-10 h-10 rounded-full bg-gray-200 dark:bg-luxury-charcoal flex items-center justify-center text-gray-800 dark:text-luxury-gold hover:bg-gray-300 dark:hover:bg-luxury-gold/20 transition-all duration-300 border-2 border-gray-300 dark:border-luxury-gold/30"
+                aria-label="Toggle theme"
+              >
+                <AnimatePresence mode="wait">
+                  {theme === 'dark' ? (
+                    <motion.div
+                      key="moon"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Moon size={18} />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="sun"
+                      initial={{ rotate: 90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -90, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Sun size={18} />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+            )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-gray-800 dark:text-white hover:text-luxury-gold transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {/* Mobile Menu Button & Theme Toggle */}
+          <div className="md:hidden flex items-center space-x-3">
+            {/* Mobile Theme Toggle */}
+            {mounted && (
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={toggleTheme}
+                className="w-9 h-9 rounded-full bg-gray-200 dark:bg-luxury-charcoal flex items-center justify-center text-gray-800 dark:text-luxury-gold border-2 border-gray-300 dark:border-luxury-gold/30"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <Moon size={16} /> : <Sun size={16} />}
+              </motion.button>
+            )}
+
+            <button
+              className="text-gray-800 dark:text-white hover:text-luxury-gold transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
       </div>
 
