@@ -4,67 +4,67 @@ import { motion } from 'framer-motion'
 import DNAHelixGallery from '@/components/gallery/DNAHelixGallery'
 
 export default function Gallery() {
-  // Gallery images data
+  // Gallery images data - Ladakh themed
   const galleryImages = [
     {
-      src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Ocean View Suite',
-      category: 'Rooms'
+      src: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Pangong Lake',
+      category: 'Landscapes'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Himalayan Mountains',
+      category: 'Nature'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Thiksey Monastery',
+      category: 'Culture'
     },
     {
       src: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Infinity Pool',
-      category: 'Amenities'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Spa Sanctuary',
-      category: 'Wellness'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Gourmet Restaurant',
-      category: 'Dining'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Private Beach',
-      category: 'Outdoor'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Luxury Lobby',
-      category: 'Interior'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Presidential Suite',
+      title: 'Luxury Suite',
       category: 'Rooms'
     },
     {
-      src: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Fine Dining',
+      src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Nubra Valley',
+      category: 'Landscapes'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Buddhist Monastery',
+      category: 'Culture'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Mountain View Room',
+      category: 'Rooms'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Ladakh Peaks',
+      category: 'Nature'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Spa & Wellness',
+      category: 'Amenities'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1454391304352-2bf4678b1a7a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Tso Moriri Lake',
+      category: 'Landscapes'
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Traditional Cuisine',
       category: 'Dining'
     },
     {
-      src: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Wellness Center',
-      category: 'Wellness'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1551524164-6cf2ac531400?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Mountain Adventures',
-      category: 'Outdoor'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Event Spaces',
-      category: 'Events'
-    },
-    {
-      src: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
-      title: 'Grand Ballroom',
-      category: 'Events'
+      src: 'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+      title: 'Starry Night Sky',
+      category: 'Nature'
     },
   ]
 
@@ -89,10 +89,10 @@ export default function Gallery() {
             transition={{ duration: 1, delay: 0.2 }}
           >
             <h1 className="text-5xl md:text-7xl font-serif font-bold text-gradient mb-6">
-              Gallery
+              Discover Ladakh
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 leading-relaxed mb-4">
-              Experience our luxury resort through an immersive 3D journey
+              Experience the majestic beauty of the Himalayas through an immersive 3D journey
             </p>
             <p className="text-sm text-gray-400">
               Scroll to explore • Hover to interact • Click to view fullscreen
@@ -122,10 +122,10 @@ export default function Gallery() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-gradient mb-6">
-              Ready to Experience Luxury?
+              Ready to Experience the Himalayas?
             </h2>
             <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-              Book your stay and create unforgettable memories at Luxe Haven
+              Book your stay and create unforgettable memories in the heart of Ladakh
             </p>
             <motion.a
               href="/booking"

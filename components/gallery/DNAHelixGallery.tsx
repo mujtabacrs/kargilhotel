@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 
@@ -18,7 +18,24 @@ interface DNAHelixGalleryProps {
 const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [scrollLocked, setScrollLocked] = useState(false)
+  const [rotationProgress, setRotationProgress] = useState(0)
+  const [mounted, setMounted] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Set mounted state and check mobile
+  useEffect(() => {
+    setMounted(true)
+    setIsMobile(window.innerWidth < 768)
+    
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Scroll-based animation
   const { scrollYProgress } = useScroll({
@@ -26,15 +43,66 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
     offset: ['start start', 'end end']
   })
 
-  // Smooth spring animation for scroll
+  // Smooth spring animation for scroll - increased smoothness
   const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 50,
-    damping: 40,
+    stiffness: 100,
+    damping: 30,
     restDelta: 0.001
   })
 
-  // Transform scroll to rotation (multiply for more rotations)
-  const helixRotation = useTransform(smoothProgress, [0, 1], [0, 360]) // 1 full rotation
+  // Transform scroll to rotation
+  const helixRotation = useTransform(smoothProgress, [0, 1], [0, 360])
+
+  // Track rotation progress
+  useEffect(() => {
+    const unsubscribe = smoothProgress.on('change', (latest) => {
+      setRotationProgress(latest)
+      
+      // Lock scroll when gallery rotation is in progress (between 1% and 99%)
+      if (latest >= 0.01 && latest <= 0.99) {
+        setScrollLocked(true)
+      } else {
+        setScrollLocked(false)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [smoothProgress])
+
+  // Scroll lock effect
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const handleWheel = (e: WheelEvent) => {
+      const container = containerRef.current
+      if (!container) return
+
+      const rect = container.getBoundingClientRect()
+      const isAtTop = rect.top <= 0
+      const isAtBottom = rect.bottom >= window.innerHeight
+
+      // Check if we're in the gallery section
+      if (isAtTop && !isAtBottom) {
+        // We're in the gallery section
+        const progress = rotationProgress
+
+        // Lock scroll if rotation is not complete (between 1% and 99%)
+        if (progress >= 0.01 && progress <= 0.99) {
+          e.preventDefault()
+          
+          // Manually scroll the window to animate the gallery with smoother motion
+          const scrollAmount = e.deltaY * 0.3
+          window.scrollBy({
+            top: scrollAmount,
+            behavior: 'auto'
+          })
+        }
+      }
+    }
+
+    window.addEventListener('wheel', handleWheel, { passive: false })
+    return () => window.removeEventListener('wheel', handleWheel)
+  }, [rotationProgress])
 
   // Mouse movement parallax
   useEffect(() => {
@@ -50,28 +118,26 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
 
   // Calculate helix position for each image
   const getHelixPosition = (index: number, totalImages: number, rotation: number, strand: number) => {
-    const angleStep = 360 / (totalImages / 2) // Divide by 2 since we have 2 strands
+    const angleStep = 360 / (totalImages / 2)
     const baseAngle = index * angleStep
-    const strandOffset = strand * 180 // Second strand offset by 180 degrees
+    const strandOffset = strand * 180
     const angle = (baseAngle + strandOffset + rotation) % 360
     const angleRad = (angle * Math.PI) / 180
 
-    // Helix parameters - responsive
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
-    const radius = isMobile ? 180 : 280 // Smaller radius on mobile
-    const verticalSpacing = isMobile ? 80 : 100 // Tighter spacing on mobile
+    // Helix parameters - use state instead of window check
+    const radius = isMobile ? 140 : 280
+    const verticalSpacing = isMobile ? 70 : 100
     
     // Calculate 3D position
     const x = Math.cos(angleRad) * radius
     const z = Math.sin(angleRad) * radius
     const y = (index * verticalSpacing) - ((totalImages / 2) * verticalSpacing / 2)
 
-    // Calculate distance from viewer (for scaling and opacity)
-    // Items with positive z are closer to viewer
-    const normalizedZ = (z + radius) / (radius * 2) // 0 to 1, where 1 is closest
-    const scale = 0.6 + (normalizedZ * 0.6) // Scale from 0.6 to 1.2
-    const opacity = 0.4 + (normalizedZ * 0.6) // Opacity from 0.4 to 1
-    const blur = (1 - normalizedZ) * 3 // Blur from 3px to 0px
+    // Calculate distance from viewer
+    const normalizedZ = (z + radius) / (radius * 2)
+    const scale = 0.6 + (normalizedZ * 0.6)
+    const opacity = 0.4 + (normalizedZ * 0.6)
+    const blur = (1 - normalizedZ) * 3
 
     return { x, y, z, scale, opacity, blur }
   }
@@ -93,18 +159,18 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
       {/* Main Gallery Container */}
       <div
         ref={containerRef}
-        className="relative h-[200vh] bg-gradient-to-b from-black via-luxury-dark to-black overflow-hidden"
+        className="relative h-[300vh] bg-gradient-to-b from-black via-luxury-dark to-black overflow-hidden"
       >
         {/* Particle Background */}
         <div className="absolute inset-0 opacity-30 pointer-events-none">
-          {[...Array(50)].map((_, i) => (
+          {mounted && [...Array(50)].map((_, i) => (
             <motion.div
               key={i}
               className="absolute w-1 h-1 bg-luxury-gold rounded-full"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
-              }}
+              } as any}
               animate={{
                 opacity: [0.2, 0.8, 0.2],
                 scale: [1, 1.5, 1],
@@ -127,33 +193,34 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
         {/* 3D Helix Container - Sticky */}
         <div className="sticky top-0 h-screen flex items-center justify-center px-4">
           <div
-            className="relative w-full max-w-6xl h-full"
+            className="relative w-full max-w-6xl h-full mx-auto"
             style={{
               perspective: '1500px',
               perspectiveOrigin: '50% 50%',
             }}
           >
             <motion.div
-              className="relative w-full h-full flex items-center justify-center"
+              className="absolute inset-0 flex items-center justify-center"
               style={{
-                transformStyle: 'preserve-3d',
-                rotateY: mousePosition.x * 8,
-                rotateX: -mousePosition.y * 8,
-              }}
+                transformStyle: 'preserve-3d' as const,
+                rotateY: mousePosition.x * 5,
+                rotateX: -mousePosition.y * 5,
+              } as any}
             >
               {/* DNA Helix - Two Strands */}
               {images.map((image, index) => {
-                // Determine which strand (0 or 1)
                 const strand = index % 2
                 const strandIndex = Math.floor(index / 2)
 
                 return (
                   <motion.div
                     key={index}
-                    className="absolute top-1/2 left-1/2 cursor-pointer"
+                    className="absolute cursor-pointer"
                     style={{
-                      transformStyle: 'preserve-3d',
-                    }}
+                      transformStyle: 'preserve-3d' as const,
+                      left: '50%',
+                      top: '50%',
+                    } as any}
                   >
                     <motion.div
                       style={{
@@ -177,21 +244,22 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
                           const pos = getHelixPosition(strandIndex, images.length, rotation, strand)
                           return pos.opacity
                         }),
-                      }}
+                        translateX: '-50%',
+                        translateY: '-50%',
+                      } as any}
                       onClick={() => setSelectedImage(index)}
                       whileHover={{
                         scale: 1.2,
-                        zIndex: 50,
                         transition: { duration: 0.3 }
                       }}
-                      className="relative"
+                      className="relative z-0 hover:z-50"
                     >
                       <motion.div
                         className="relative w-32 h-24 sm:w-40 sm:h-32 md:w-56 md:h-40 rounded-xl overflow-hidden glass-dark shadow-2xl group border-2 border-white/10"
                         style={{
-                          transformStyle: 'preserve-3d',
-                          backfaceVisibility: 'hidden',
-                        }}
+                          transformStyle: 'preserve-3d' as const,
+                          backfaceVisibility: 'hidden' as const,
+                        } as any}
                       >
                         {/* Image */}
                         <div className="relative w-full h-full">
@@ -224,27 +292,9 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
                   </motion.div>
                 )
               })}
-
             </motion.div>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center text-white/60 pointer-events-none z-20"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-        >
-          <p className="text-xs sm:text-sm mb-2">Scroll to explore the helix</p>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-5 h-8 sm:w-6 sm:h-10 border-2 border-white/40 rounded-full mx-auto flex justify-center pt-2"
-          >
-            <div className="w-1 h-2 bg-white/60 rounded-full" />
-          </motion.div>
-        </motion.div>
       </div>
 
       {/* Fullscreen Modal */}
