@@ -52,7 +52,7 @@ const GlimpseSection = () => {
   ]
 
   return (
-    <section ref={containerRef} className="py-24 bg-gray-50 dark:bg-luxury-charcoal overflow-hidden">
+    <section ref={containerRef} className="relative py-24 bg-gray-50 dark:bg-luxury-charcoal overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}

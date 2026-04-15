@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import ClientLayout from '@/components/ClientLayout'
+import { ThemeProvider } from '@/context/ThemeContext'
 
 export const metadata: Metadata = {
   title: 'Luxe Haven - Premium Luxury Hotel',
@@ -14,9 +15,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="bg-white dark:bg-luxury-dark text-gray-900 dark:text-white transition-colors">
-        <ClientLayout>{children}</ClientLayout>
+    <html lang="en" suppressHydrationWarning className="dark" data-scroll-behavior="smooth">
+      <body className="bg-luxury-dark text-white transition-colors">
+        <ThemeProvider>
+          <ClientLayout>{children}</ClientLayout>
+        </ThemeProvider>
       </body>
     </html>
   )

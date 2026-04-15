@@ -10,7 +10,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior removed - using data-scroll-behavior attribute instead */
 }
 
 body {
