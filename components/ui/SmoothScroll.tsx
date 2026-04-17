@@ -30,5 +30,5 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  return <>{children}</>
+  return <div className="relative min-h-screen" style={{ position: 'relative' }}>{children}</div>
 }

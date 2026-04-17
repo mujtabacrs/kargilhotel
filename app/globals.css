@@ -32,7 +32,9 @@
   --background-end-rgb: 10, 10, 10;
 }
 
+html,
 body {
+  position: relative;
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
   font-family: 'Manrope', 'Inter', sans-serif;

@@ -16,7 +16,7 @@ const OriginSection = () => {
   const smoothY = useSpring(y, { stiffness: 100, damping: 30 })
 
   return (
-    <section ref={containerRef} className="relative py-60 bg-c-black overflow-hidden flex flex-col items-center justify-center text-center px-6">
+    <section ref={containerRef} style={{ position: 'relative' }} className="relative py-60 bg-c-black overflow-hidden flex flex-col items-center justify-center text-center px-6">
       
       {/* Floating 3D Object (Speculative Asset) */}
       <motion.div 

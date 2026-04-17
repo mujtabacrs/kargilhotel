@@ -10,10 +10,10 @@ const WhatWeOffer = () => {
     offset: ["start end", "end start"]
   })
 
-  // Scroll-linked rise-up effect for the primary heading - Dramatized for overlap
-  const headingY = useTransform(scrollYProgress, [0, 0.4], [300, 0])
-  const headingOpacity = useTransform(scrollYProgress, [0, 0.35], [0, 1])
-  
+  // Scroll-linked slide-down effect for the primary heading
+  const headingY = useTransform(scrollYProgress, [0, 0.25], [-150, 0])
+  const headingOpacity = useTransform(scrollYProgress, [0, 0.25], [0, 1])
+
   // Fade in the background color to create a seamless overlap with the hero
   const bgColor = useTransform(
     scrollYProgress,
@@ -22,12 +22,16 @@ const WhatWeOffer = () => {
   )
 
   return (
-    <motion.section 
-      ref={containerRef} 
-      style={{ backgroundColor: bgColor }}
-      className="relative py-32 overflow-hidden -mt-[30vh] z-30"
+    <motion.section
+      ref={containerRef}
+      className="relative pt-[25vh] pb-40 min-h-screen z-30 bg-[#12141a] -mt-[100vh]"
     >
-
+      {/* The Arc Layover requested by the user */}
+      <div className="absolute top-0 left-0 w-full h-[100px] md:h-[150px] -translate-y-[99%] z-30 pointer-events-none">
+        <svg viewBox="0 0 1440 100" className="w-full h-full fill-[#12141a]" preserveAspectRatio="none">
+          <path d="M0,100 C720,0 1440,100 1440,100 L0,100 Z" />
+        </svg>
+      </div>
       {/* Principle Decorative SVG Path (Obsidian Style) */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <svg
@@ -61,7 +65,7 @@ const WhatWeOffer = () => {
 
         <motion.span
           style={{ y: headingY, opacity: headingOpacity }}
-          className="font-editorial text-4xl md:text-7xl text-foreground-rgb mb-12"
+          className="font-editorial text-6xl md:text-9xl text-foreground-rgb mb-12 drop-shadow-md"
         >
           The Principles
         </motion.span>

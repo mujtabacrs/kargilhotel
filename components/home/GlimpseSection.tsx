@@ -62,7 +62,7 @@ const GlimpseSection = () => {
   const svgScale = useTransform(smoothProgress, [0, 1], [1, 1.2])
 
   return (
-    <section ref={containerRef} className="relative py-40 bg-c-black overflow-hidden select-none">
+    <section ref={containerRef} style={{ position: 'relative' }} className="relative pt-16 pb-40 bg-c-black overflow-hidden select-none">
       
       {/* Sequence Decorative SVG Path (Obsidian Style) */}
       <div className="absolute inset-0 pointer-events-none z-0">

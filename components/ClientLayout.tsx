@@ -11,7 +11,7 @@ export default function ClientLayout({
   return (
     <>
       <Navbar />
-      <main>{children}</main>
+      <main className="relative" style={{ position: 'relative' }}>{children}</main>
       <Footer />
     </>
   )

@@ -1,10 +1,9 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const Testimonials = () => {
-  const containerRef = useRef<HTMLElement>(null)
   
   const testimonials = [
     {
@@ -34,7 +33,7 @@ const Testimonials = () => {
   ]
 
   return (
-    <section ref={containerRef} className="relative py-40 bg-background-start-rgb overflow-hidden">
+    <section className="relative py-40 bg-background-start-rgb overflow-hidden">
       
       {/* Decorative Architectural Line */}
       <div className="absolute left-1/2 top-0 bottom-0 w-px bg-foreground-rgb/5 pointer-events-none hidden md:block" />

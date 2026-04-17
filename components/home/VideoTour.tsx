@@ -17,7 +17,7 @@ const VideoTour = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
 
   return (
-    <section ref={containerRef} className="relative py-40 border-t border-white/5 bg-background-start-rgb overflow-hidden">
+    <section ref={containerRef} style={{ position: 'relative' }} className="relative py-40 border-t border-white/5 bg-background-start-rgb overflow-hidden">
       
       {/* Integrative SVG Path */}
       <div className="absolute inset-x-0 top-0 h-full pointer-events-none opacity-20">
