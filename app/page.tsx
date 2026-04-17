@@ -5,6 +5,8 @@ import WhatWeOffer from '@/components/home/WhatWeOffer'
 import GlimpseSection from '@/components/home/GlimpseSection'
 import Testimonials from '@/components/home/Testimonials'
 import VideoTour from '@/components/home/VideoTour'
+import OriginSection from '@/components/home/OriginSection'
+import ObsidianFooter from '@/components/home/ObsidianFooter'
 
 export default function Home() {
   return (
@@ -14,6 +16,7 @@ export default function Home() {
       <GlimpseSection />
       <VideoTour />
       <Testimonials />
+      <OriginSection />
     </div>
   )
 }

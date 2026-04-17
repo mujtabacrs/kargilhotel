@@ -87,7 +87,7 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
       if (!visualContainerRef.current || rotationComplete) return
 
       const rect = visualContainerRef.current.getBoundingClientRect()
-      const isInViewport = rect.top <= window.innerHeight * 0.5 && rect.bottom >= window.innerHeight * 0.5
+      const isInViewport = rect.top <= window.innerHeight * 0.2 && rect.bottom >= window.innerHeight * 0.8
 
       if (!isInViewport) return
 
@@ -97,16 +97,14 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
         setIsSticky(true)
       }
 
-      // Prevent default scrolling while gallery is actively rotating
-      e.preventDefault()
+      // Smooth rotation based on scroll intensity
+      const rotationAmount = e.deltaY * 0.1
+      setRotation((prev) => prev + rotationAmount)
 
-      const direction = e.deltaY > 0 ? 1 : -1
-      const rotationStep = rotationStepRef.current
-      setRotation((prev) => prev + (direction * rotationStep))
-
+      // Total rotation tracked to decide when to release sticky
       setScrollCount((prevCount) => {
-        const newCount = prevCount + 1
-        if (newCount >= MAX_SCROLLS) {
+        const newCount = prevCount + Math.abs(e.deltaY)
+        if (newCount >= 2000) { // Release sticky after sufficient scrolling
           setRotationComplete(true)
           setIsSticky(false)
         }
@@ -114,7 +112,9 @@ const DNAHelixGallery = ({ images }: DNAHelixGalleryProps) => {
       })
     }
 
-    window.addEventListener('wheel', handleWheel, { passive: false })
+    // Note: Removed e.preventDefault() to avoid trapping the user and console warnings.
+    // The sticky behavior now relies on the container height and user interaction.
+    window.addEventListener('wheel', handleWheel)
     return () => window.removeEventListener('wheel', handleWheel)
   }, [rotationComplete, rotationStarted])
 

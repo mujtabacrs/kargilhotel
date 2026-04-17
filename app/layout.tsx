@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import ClientLayout from '@/components/ClientLayout'
 import { ThemeProvider } from '@/context/ThemeContext'
+import SmoothScroll from '@/components/ui/SmoothScroll'
 
 export const metadata: Metadata = {
   title: 'Luxe Haven - Premium Luxury Hotel',
@@ -15,10 +16,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className="dark" data-scroll-behavior="smooth">
-      <body className="bg-luxury-dark text-white transition-colors">
+    <html lang="en" suppressHydrationWarning className="dark">
+      <body suppressHydrationWarning className="bg-luxury-dark text-white transition-colors antialiased">
         <ThemeProvider>
-          <ClientLayout>{children}</ClientLayout>
+          <SmoothScroll>
+            <ClientLayout>{children}</ClientLayout>
+          </SmoothScroll>
         </ThemeProvider>
       </body>
     </html>

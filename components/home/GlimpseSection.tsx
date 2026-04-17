@@ -1,145 +1,202 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion'
 import Link from 'next/link'
 
 const GlimpseSection = () => {
-  const containerRef = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLElement>(null)
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ['start end', 'end start']
+    offset: ["start end", "end start"]
   })
 
-  const x = useTransform(scrollYProgress, [0, 1], [0, -300])
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
+  // Smooth scroll progress for parallax effects
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
   })
 
   const images = [
     {
-      src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+      src: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=900&auto=format&fit=crop',
       title: 'Ocean View Suite',
-      description: 'Wake up to breathtaking ocean vistas'
+      description: 'Wake up to breathtaking vistas'
     },
     {
-      src: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Infinity Pool',
-      description: 'Relax in our stunning infinity pool'
+      src: 'https://images.unsplash.com/photo-1590490359683-658d3d23f972?q=80&w=900&auto=format&fit=crop',
+      title: 'Royal Sanctuary',
+      description: 'Unparalleled comfort and design'
     },
     {
-      src: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Spa Sanctuary',
-      description: 'Rejuvenate in our world-class spa'
+      src: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?q=80&w=900&auto=format&fit=crop',
+      title: 'Infinity Reflection',
+      description: 'The line between water and sky'
     },
     {
-      src: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Gourmet Restaurant',
-      description: 'Savor culinary masterpieces'
+      src: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?q=80&w=900&auto=format&fit=crop',
+      title: 'Starlight Terrace',
+      description: 'Dine under the Himalayan sky'
     },
     {
-      src: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Private Beach',
-      description: 'Your own slice of paradise'
+      src: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=900&auto=format&fit=crop',
+      title: 'Zen Retreat',
+      description: 'A curriculum of silence'
     },
     {
-      src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-      title: 'Luxury Lobby',
-      description: 'Grand entrance to luxury'
+      src: 'https://images.unsplash.com/photo-1629721671030-a83edbb11237?q=80&w=900&auto=format&fit=crop',
+      title: 'The Great Gorge',
+      description: 'The epic journey to origin'
     },
+    {
+      src: 'https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?q=80&w=900&auto=format&fit=crop',
+      title: 'Artisan Culinary',
+      description: 'Form results from context and material'
+    }
   ]
 
+  // Parallax transforms for images - Wider range for more items
+  const xTranslate = useTransform(smoothProgress, [0, 1], [0, -1200])
+  const svgScale = useTransform(smoothProgress, [0, 1], [1, 1.2])
+
   return (
-    <section ref={containerRef} className="relative py-24 bg-gray-50 dark:bg-luxury-charcoal overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+    <section ref={containerRef} className="relative py-40 bg-c-black overflow-hidden select-none">
+      
+      {/* Sequence Decorative SVG Path (Obsidian Style) */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <svg 
+          className="w-full h-full opacity-20" 
+          viewBox="0 0 1440 1080" 
+          preserveAspectRatio="none"
         >
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-gradient mb-6">
-            A Glimpse of Paradise
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
-            Explore our stunning facilities and immerse yourself in luxury
-          </p>
-          <Link href="/gallery">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="btn-luxury"
-            >
-              View Full Gallery
-            </motion.button>
-          </Link>
-        </motion.div>
+          <motion.path 
+            fill="none" 
+            stroke="url(#sequence-path-gradient)" 
+            strokeWidth="1" 
+            d="M517,1080c246-232.9,804.3-242.7,752-429.1-27.9-99.7-412.5-154.2-649-29.3-228.9,120.8-467.4,88.3-462,49.5,15.1-108.4,394,337.4,527,133.9C924.6,438.3,14,694.9,250,0" 
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            whileInView={{ pathLength: 1 }}
+            transition={{ duration: 5, ease: "linear" }}
+          />
+          <defs>
+            <linearGradient id="sequence-path-gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#151415" />
+              <stop offset="0.5" stopColor="#7b5136" />
+              <stop offset="1" stopColor="var(--c-yellow)" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
 
-        {/* Horizontal Scrolling Gallery */}
-        <div className="relative">
-          <motion.div
-            style={{ x }}
-            className="flex space-x-8 pb-8"
-          >
-            {images.map((image, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ 
-                  scale: 1.05, 
-                  rotateY: 5,
-                  z: 50
-                }}
-                className="relative flex-shrink-0 w-80 h-96 rounded-2xl overflow-hidden glass group cursor-pointer shadow-lg"
-                style={{ transformStyle: 'preserve-3d' }}
+      <div className="relative z-10 w-full flex flex-col items-center">
+        
+        {/* Stone texture Masking Background (Obsidian Style) */}
+        <motion.div 
+          style={{ scale: svgScale }}
+          className="absolute top-0 w-2/3 aspect-square opacity-10 blur-3xl rounded-full bg-luxury-gold pointer-events-none"
+        />
+
+        <div className="w-full max-w-7xl px-6 md:px-20">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-12">
+            <div className="flex-1">
+              <motion.span 
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                className="text-[0.6rem] uppercase tracking-[0.5em] text-white/40 mb-6 block"
               >
-                {/* Image */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                  style={{ backgroundImage: `url(${image.src})` }}
-                />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Content */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                  <h3 className="text-xl font-serif font-semibold text-white mb-2">
-                    {image.title}
-                  </h3>
-                  <p className="text-gray-200 text-sm">
-                    {image.description}
-                  </p>
-                </div>
+                The Collection
+              </motion.span>
+              <h2 className="font-editorial text-5xl md:text-8xl text-white leading-none">
+                A Glimpse of <br /> <span className="italic ml-12">Paradise</span>
+              </h2>
+            </div>
+            
+            <div className="flex-1 md:max-w-xs relative">
+              <p className="text-xs md:text-sm text-white/60 leading-relaxed mb-8">
+                Only a select preview of our most iconic luxury spaces. Each experience is tied to a specific place, which defines its origin.
+              </p>
+              
+              <div className="flex items-center justify-between">
+                <Link href="/gallery">
+                  <button className="text-white/80 hover:text-white text-[0.6rem] uppercase tracking-[0.3em] flex items-center gap-4 transition-colors">
+                    <span className="w-8 h-px bg-white/40 block" />
+                    View Full Gallery
+                  </button>
+                </Link>
 
-                {/* Glow Effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-r from-luxury-gold/20 to-transparent" />
+                {/* Navigation Arrows */}
+                <div className="flex gap-4">
+                  <motion.button 
+                    whileHover={{ scale: 1.1, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      const container = document.getElementById('glimpse-scroll-container')
+                      if (container) container.scrollBy({ left: -400, behavior: 'smooth' })
+                    }}
+                    className="w-10 h-10 rounded-full border border-c-gold/30 flex items-center justify-center text-c-gold transition-colors hover:border-c-gold"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                  </motion.button>
+                  <motion.button 
+                    whileHover={{ scale: 1.1, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      const container = document.getElementById('glimpse-scroll-container')
+                      if (container) container.scrollBy({ left: 400, behavior: 'smooth' })
+                    }}
+                    className="w-10 h-10 rounded-full border border-c-gold/30 flex items-center justify-center text-c-gold transition-colors hover:border-c-gold"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  </motion.button>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
+              </div>
 
-          {/* Gradient Overlays */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-gray-50 dark:from-luxury-charcoal to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-gray-50 dark:from-luxury-charcoal to-transparent pointer-events-none z-10" />
+            </div>
+          </div>
         </div>
 
-        {/* Scroll Hint */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: 1 }}
-          className="text-center mt-8"
-        >
-          <p className="text-gray-500 dark:text-gray-400 text-sm">Scroll to see more</p>
-        </motion.div>
+        {/* Horizontal Sequence with Arch Masks */}
+        <div id="glimpse-scroll-container" className="w-full overflow-x-auto no-scrollbar scroll-smooth">
+          <motion.div 
+            style={{ x: xTranslate }}
+            className="flex gap-4 md:gap-8 pl-6 md:pl-20 mb-20 min-w-max"
+          >
+            {images.map((image, i) => (
+              <div key={i} className="flex-shrink-0 w-[60vw] md:w-[18vw] group cursor-pointer">
+                <div className="relative aspect-[3/4] overflow-hidden arch-mask mb-6">
+                  <img 
+                    src={image.src} 
+                    alt={image.title} 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
+                </div>
+                <div className="flex justify-between items-start gap-4">
+                  <div>
+                    <h3 className="font-editorial text-lg text-white mb-1">{image.title}</h3>
+                    <p className="text-[0.6rem] uppercase tracking-widest text-white/40">{image.description}</p>
+                  </div>
+                  <span className="font-editorial text-base text-white/20">{i + 1 < 10 ? `0${i + 1}` : i + 1}</span>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
       </div>
+
+      {/* Decorative Arch Gradient Border */}
+      <div className="flex justify-center w-full">
+        <div className="w-px h-32 bg-gradient-to-b from-luxury-gold to-transparent opacity-30" />
+      </div>
+
     </section>
   )
 }
