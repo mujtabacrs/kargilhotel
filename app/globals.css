@@ -38,7 +38,7 @@ body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-start-rgb));
   font-family: 'Manrope', 'Inter', sans-serif;
-  overflow-x: hidden;
+ 
   -webkit-font-smoothing: antialiased;
 }
 
@@ -97,7 +97,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  
 }
 
 /* Button Refinement */

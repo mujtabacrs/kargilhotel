@@ -27,13 +27,13 @@ const HeroSection = () => {
   })
 
   // Only affect the sinking text as requested
-  const titleY = useTransform(scrollYProgress, [0, 0.5], [0, 400]) // Sinks DOWN until it unpins at 0.5
-  const titleOpacity = useTransform(scrollYProgress, [0.3, 0.5], [1, 0]) // Gentle fade as it sinks
+  const titleY = useTransform(scrollYProgress, [0, 1], [0, 500]) // Sinks DOWN until it unpins at 0.5
+  const titleOpacity = useTransform(scrollYProgress, [0.1, 0.4], [1, 0]) // Gentle fade as it sinks
   
   // The 'Arc First' Layover
   const clipPath = useTransform(
     scrollYProgress,
-    [0, 0.5],
+    [0, 1],
     [
       'inset(20% 30% 0% 30% round 15vw 15vw 0 0)',
       'inset(0% 0% 0% 0% round 0vw 0vw 0 0)'
@@ -41,8 +41,8 @@ const HeroSection = () => {
   )
 
   return (
-    <section ref={containerRef} className="relative h-[200vh] bg-[#12141a] z-10 block">
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+    <section ref={containerRef} className="relative h-[250vh] bg-[#12141a] z-10 block">
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center ">
           
         {/* Blured Background Image Layer */}
         <div className="absolute inset-0 z-0 flex w-full h-full">
@@ -141,19 +141,7 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* Call to Action (Floating) */}
-        <motion.div 
-          className="absolute bottom-10 right-10 z-40"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-        >
-          <Link href="/booking">
-            <button className="btn-luxury px-6 py-2 text-[0.6rem]">
-              AVAILABILITY
-            </button>
-          </Link>
-        </motion.div>
+
       </div>
 
       <style jsx>{`
